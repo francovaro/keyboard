@@ -23,8 +23,7 @@ void Keyboard_Init(void)
 	EXTI_InitTypeDef EXTI_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
-	pressed_11 = RESET;
-	pressed_12 = RESET;
+	pressedGlobal = 0;
 
 	/* init clock */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
@@ -71,21 +70,18 @@ void Keyboard_Init(void)
 
 void EXTI15_10_IRQHandler(void)
 {
-	if(EXTI_GetITStatus(EXTI_Line11) == SET)
-	{
-		/* Clear the EXTI line 12 pending bit */
-		pressed_11 = SET;
+	uint8_t i;
 
-		EXTI_ClearITPendingBit(EXTI_Line11);
+	for (i = 0; i< eKey_LAST; i++)
+	{
+		if (EXTI_GetITStatus(keyboard[i].intLine) == SET)
+		{
+			//
+			EXTI_ClearITPendingBit(keyboard[i].intLine);
+			pressedGlobal = pressedGlobal & (1 << keyboard[i].key);
+		}
 	}
 
-	if(EXTI_GetITStatus(EXTI_Line12) == SET)
-	{
-		/* Clear the EXTI line 12 pending bit */
-		pressed_12 = SET;
-
-		EXTI_ClearITPendingBit(EXTI_Line12);
-	}
 }
 
 void keyboard_SetFunctionality(void)

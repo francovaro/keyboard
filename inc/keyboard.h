@@ -12,8 +12,7 @@
 
 #include "stm32f4xx_gpio.h"
 
-volatile uint8_t pressed_11;
-volatile uint8_t pressed_12;
+volatile uint16_t pressedGlobal;
 
 typedef enum
 {
@@ -41,7 +40,7 @@ typedef struct
 }t_keyboard;
 
 
-void keyboard_Init(void);
+void Keyboard_Init(void);
 
 
 #endif /* KEYBOARD_H_ */

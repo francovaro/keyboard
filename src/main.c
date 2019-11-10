@@ -18,8 +18,7 @@
 
 int main(void)
 {
-	const char * print_11 	= "11\n";
-	const char * print_12 	= "12\n";
+	uint16_t i;
 	const char * start 		= "START\n";
 
 	Keyboard_Init();
@@ -29,16 +28,17 @@ int main(void)
 
 	while(1)
 	{
-		if (pressed_11 == SET)
+		if (pressedGlobal != 0)
 		{
-			pressed_11 = RESET;
-			UART_fv_SendData(print_11, strlen(print_11));
-		}
+			for( i = 0; i < eKey_LAST; i++)
+			{
+				if (pressedGlobal & (1<<i))
+				{
+					pressedGlobal^= (1<<i);
+				}
+			}
 
-		if (pressed_12 == SET)
-		{
-			pressed_12 = RESET;
-			UART_fv_SendData(print_12, strlen(print_12));
+
 		}
 	}
 
