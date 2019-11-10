@@ -19,11 +19,12 @@ void keyboard_Init(void)
 	EXTI_InitTypeDef EXTI_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
-	pressed = RESET;
+	pressed_11 = RESET;
+	pressed_12 = RESET;
 
 	/* init clock */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+
 	/* Enable SYSCFG's APB interface clock */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_EXTIT, ENABLE);	/* useful ? */
@@ -32,22 +33,26 @@ void keyboard_Init(void)
 	EXTI_StructInit(&EXTI_InitStructure);
 
 	/* init GPIO as input */
-	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 );
+	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_11);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOA , &GPIO_InitStructure);
 
 	/* connect pin to ext */
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource12);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource11);
 
-	/* set ext  13 */
+	/* set ext  12 */
 	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
 
+	/* set ext  11 */
+	EXTI_InitStructure.EXTI_Line = EXTI_Line11;
 	EXTI_Init(&EXTI_InitStructure);
 
 	/* Enable the USARTx Interrupt */
@@ -60,11 +65,19 @@ void keyboard_Init(void)
 
 void EXTI15_10_IRQHandler(void)
 {
-	if(EXTI_GetITStatus(EXTI_Line13) != RESET)
+	if(EXTI_GetITStatus(EXTI_Line11) == SET)
 	{
-		/* Clear the EXTI line 13 pending bit */
-		pressed = SET;
+		/* Clear the EXTI line 12 pending bit */
+		pressed_11 = SET;
 
-		EXTI_ClearITPendingBit(EXTI_Line13);
+		EXTI_ClearITPendingBit(EXTI_Line11);
+	}
+
+	if(EXTI_GetITStatus(EXTI_Line12) == SET)
+	{
+		/* Clear the EXTI line 12 pending bit */
+		pressed_12 = SET;
+
+		EXTI_ClearITPendingBit(EXTI_Line12);
 	}
 }

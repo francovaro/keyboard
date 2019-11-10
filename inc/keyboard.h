@@ -10,7 +10,8 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
-volatile uint8_t pressed;
+volatile uint8_t pressed_11;
+volatile uint8_t pressed_12;
 
 typedef struct
 {

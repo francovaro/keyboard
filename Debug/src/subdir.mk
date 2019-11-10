@@ -7,19 +7,22 @@ C_SRCS += \
 ../src/keyboard.c \
 ../src/main.c \
 ../src/syscalls.c \
-../src/system_stm32f4xx.c 
+../src/system_stm32f4xx.c \
+../src/uart.c 
 
 OBJS += \
 ./src/keyboard.o \
 ./src/main.o \
 ./src/syscalls.o \
-./src/system_stm32f4xx.o 
+./src/system_stm32f4xx.o \
+./src/uart.o 
 
 C_DEPS += \
 ./src/keyboard.d \
 ./src/main.d \
 ./src/syscalls.d \
-./src/system_stm32f4xx.d 
+./src/system_stm32f4xx.d \
+./src/uart.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
