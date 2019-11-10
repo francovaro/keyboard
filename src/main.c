@@ -22,7 +22,7 @@ int main(void)
 	const char * print_12 	= "12\n";
 	const char * start 		= "START\n";
 
-	keyboard_Init();
+	Keyboard_Init();
 	UART_fv_config(RESET);
 
 	UART_fv_SendData(start, strlen(start));

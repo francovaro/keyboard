@@ -7,13 +7,17 @@
  *  @date  : 10 nov 2019
  */
 /* STM include*/
-#include "stm32f4xx_gpio.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_exti.h"
 
+#include <stdint.h>
+
 #include "keyboard.h"
 
-void keyboard_Init(void)
+static void keyboard_SetFunctionality(void);
+static t_keyboard keyboard[eKey_LAST];
+
+void Keyboard_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	EXTI_InitTypeDef EXTI_InitStructure;
@@ -36,7 +40,7 @@ void keyboard_Init(void)
 	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_11);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOA , &GPIO_InitStructure);
 
@@ -61,6 +65,8 @@ void keyboard_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;			/* to check ! */
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
+
+	keyboard_SetFunctionality();
 }
 
 void EXTI15_10_IRQHandler(void)
@@ -80,4 +86,17 @@ void EXTI15_10_IRQHandler(void)
 
 		EXTI_ClearITPendingBit(EXTI_Line12);
 	}
+}
+
+void keyboard_SetFunctionality(void)
+{
+	keyboard[0].func = (void*)0;
+	keyboard[0].key = eKey_OK;
+	keyboard[0].port = GPIOA;
+	keyboard[0].pin	= GPIO_Pin_11;
+
+	keyboard[1].func = (void*)0;
+	keyboard[1].key = eKey_CANCEL;
+	keyboard[1].port = GPIOA;
+	keyboard[1].pin	= GPIO_Pin_12;
 }
