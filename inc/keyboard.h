@@ -12,8 +12,6 @@
 
 #include "stm32f4xx_gpio.h"
 
-//#define NULL (void*)0;
-
 volatile uint8_t pressed_11;
 volatile uint8_t pressed_12;
 
@@ -36,6 +34,7 @@ typedef enum
 typedef struct
 {
 	uint32_t 			pin;
+	uint32_t			intLine;
 	GPIO_TypeDef*		port;
 	eKeyboard_key 		key;
 	void (*func) (void);

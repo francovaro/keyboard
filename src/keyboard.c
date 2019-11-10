@@ -94,9 +94,11 @@ void keyboard_SetFunctionality(void)
 	keyboard[0].key = eKey_OK;
 	keyboard[0].port = GPIOA;
 	keyboard[0].pin	= GPIO_Pin_11;
+	keyboard[0].intLine = EXTI_Line11;
 
 	keyboard[1].func = (void*)0;
 	keyboard[1].key = eKey_CANCEL;
 	keyboard[1].port = GPIOA;
 	keyboard[1].pin	= GPIO_Pin_12;
+	keyboard[1].intLine = EXTI_Line12;
 }
