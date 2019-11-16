@@ -18,7 +18,7 @@ volatile FlagStatus usart_serialReceived;
 volatile uint16_t usart_nrOfByte;
 
 extern void UART_fv_config(uint8_t irqEnabled);
-extern void UART_fv_SendData(const char * strToSend, uint16_t byteToSend);
+extern void UART_fv_SendData(char * strToSend, uint16_t byteToSend);
 
 int uart_putc(int c);
 

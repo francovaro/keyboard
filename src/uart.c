@@ -67,7 +67,7 @@ void UART_fv_config(uint8_t irqEnabled)
 /**
  *
  */
-void UART_fv_SendData(const char * strToSend, uint16_t byteToSend)
+void UART_fv_SendData(char * strToSend, uint16_t byteToSend)
 {
 	uint16_t count;
 

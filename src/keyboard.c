@@ -78,7 +78,7 @@ void EXTI15_10_IRQHandler(void)
 		{
 			//
 			EXTI_ClearITPendingBit(keyboard[i].intLine);
-			pressedGlobal = pressedGlobal & (1 << keyboard[i].key);
+			pressedGlobal = pressedGlobal | (1 << keyboard[i].key);
 		}
 	}
 

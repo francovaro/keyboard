@@ -11,6 +11,7 @@
 
 #include "stm32f4xx.h"
 #include <string.h>
+#include <stdio.h>
 
 #include "keyboard.h"
 #include "uart.h"
@@ -20,6 +21,7 @@ int main(void)
 {
 	uint16_t i;
 	const char * start 		= "START\n";
+	char toSend[20];
 
 	Keyboard_Init();
 	UART_fv_config(RESET);
@@ -34,6 +36,8 @@ int main(void)
 			{
 				if (pressedGlobal & (1<<i))
 				{
+					snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
+					UART_fv_SendData(toSend, strlen(toSend));
 					pressedGlobal^= (1<<i);
 				}
 			}
