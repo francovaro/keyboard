@@ -15,14 +15,17 @@
 
 #include "keyboard.h"
 #include "uart.h"
+#include "systick.h"
 			
 
 int main(void)
 {
+	static uint16_t localPressed = 0;
 	uint16_t i;
-	const char * start 		= "START\n";
+	char * start 		= "START\n";
 	char toSend[20];
 
+	Systick_set(100);
 	Keyboard_Init();
 	UART_fv_config(RESET);
 
@@ -30,20 +33,21 @@ int main(void)
 
 	while(1)
 	{
-		if (pressedGlobal != 0)
+
+		if (localPressed != systick_pressed)
 		{
 			for( i = 0; i < eKey_LAST; i++)
 			{
-				if (pressedGlobal & (1<<i))
+				if ( (pressedGlobal & (1<<i)) != (localPressed& (1<<i)) )
 				{
 					snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
 					UART_fv_SendData(toSend, strlen(toSend));
-					pressedGlobal^= (1<<i);
 				}
 			}
 
-
+			localPressed = systick_pressed;
 		}
+
 	}
 
 }

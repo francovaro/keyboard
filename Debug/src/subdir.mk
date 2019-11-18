@@ -8,6 +8,7 @@ C_SRCS += \
 ../src/main.c \
 ../src/syscalls.c \
 ../src/system_stm32f4xx.c \
+../src/systick.c \
 ../src/uart.c 
 
 OBJS += \
@@ -15,6 +16,7 @@ OBJS += \
 ./src/main.o \
 ./src/syscalls.o \
 ./src/system_stm32f4xx.o \
+./src/systick.o \
 ./src/uart.o 
 
 C_DEPS += \
@@ -22,6 +24,7 @@ C_DEPS += \
 ./src/main.d \
 ./src/syscalls.d \
 ./src/system_stm32f4xx.d \
+./src/systick.d \
 ./src/uart.d 
 
 

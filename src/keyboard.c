@@ -8,6 +8,7 @@
  */
 /* STM include*/
 #include "stm32f4xx_rcc.h"
+#include "stm32f4xx_tim.h"
 #include "stm32f4xx_exti.h"
 
 #include <stdint.h>
@@ -17,6 +18,17 @@
 static void keyboard_SetFunctionality(void);
 static t_keyboard keyboard[eKey_LAST];
 
+/**
+ * @brief
+ */
+void Keyboard_StartCheck(void)
+{
+
+}
+
+/**
+ * @brief
+ */
 void Keyboard_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -35,6 +47,8 @@ void Keyboard_Init(void)
 	GPIO_StructInit(&GPIO_InitStructure);
 	EXTI_StructInit(&EXTI_InitStructure);
 
+	/*--------------------------------------------------------------------------------------*/
+	/* GPIO Init */
 	/* init GPIO as input */
 	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_11);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
@@ -47,10 +61,13 @@ void Keyboard_Init(void)
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource11);
 
+
+	/*--------------------------------------------------------------------------------------*/
+	/* EXTINT Init */
 	/* set ext  12 */
 	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;		/* yeah rising or falling ? */
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;		/* yeah rising or falling ? */
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 
@@ -58,6 +75,8 @@ void Keyboard_Init(void)
 	EXTI_InitStructure.EXTI_Line = EXTI_Line11;
 	EXTI_Init(&EXTI_InitStructure);
 
+	/*--------------------------------------------------------------------------------------*/
+	/* INTERRUPT Init */
 	/* Enable the USARTx Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;	/* to check ! */
@@ -76,9 +95,9 @@ void EXTI15_10_IRQHandler(void)
 	{
 		if (EXTI_GetITStatus(keyboard[i].intLine) == SET)
 		{
-			//
 			EXTI_ClearITPendingBit(keyboard[i].intLine);
-			pressedGlobal = pressedGlobal | (1 << keyboard[i].key);
+			//pressedGlobal = pressedGlobal | (1 << keyboard[i].key);
+			pressedGlobal ^= (1 << keyboard[i].key);	/* let's xor it */
 		}
 	}
 
