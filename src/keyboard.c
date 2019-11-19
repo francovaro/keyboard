@@ -97,7 +97,16 @@ void EXTI15_10_IRQHandler(void)
 		{
 			EXTI_ClearITPendingBit(keyboard[i].intLine);
 			//pressedGlobal = pressedGlobal | (1 << keyboard[i].key);
-			pressedGlobal ^= (1 << keyboard[i].key);	/* let's xor it */
+			if (GPIO_ReadInputDataBit(keyboard[i].port, keyboard[i].pin) == RESET)
+			{
+				pressedGlobal |= (1 << keyboard[i].key);	/* let's xor it */
+			}
+			else
+			{
+				pressedGlobal &= (~(1 << keyboard[i].key));	/* let's xor it */
+			}
+
+
 		}
 	}
 

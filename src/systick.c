@@ -10,7 +10,7 @@
 #include "keyboard.h"
 
 
-#define PRESS_THRESHOLD		(10u)	/* in ms*/
+#define PRESS_THRESHOLD		(5u)	/* in ms*/
 
 void Systick_set(uint32_t timeMs)
 {
