@@ -50,7 +50,7 @@ void Keyboard_Init(void)
 	/*--------------------------------------------------------------------------------------*/
 	/* GPIO Init */
 	/* init GPIO as input */
-	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_12 | GPIO_Pin_11);
+	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -58,21 +58,37 @@ void Keyboard_Init(void)
 	GPIO_Init(GPIOA , &GPIO_InitStructure);
 
 	/* connect pin to ext */
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource10);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource11);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource13);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource14);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource15);
 
 
 	/*--------------------------------------------------------------------------------------*/
 	/* EXTINT Init */
-	/* set ext  12 */
-	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+	/* set ext  10 */
+	EXTI_InitStructure.EXTI_Line = EXTI_Line10;
 	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;		/* yeah rising or falling ? */
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure);
 
-	/* set ext  11 */
+	/* set ext  11 to 15 */
 	EXTI_InitStructure.EXTI_Line = EXTI_Line11;
+	EXTI_Init(&EXTI_InitStructure);
+
+	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+	EXTI_Init(&EXTI_InitStructure);
+
+	EXTI_InitStructure.EXTI_Line = EXTI_Line13;
+	EXTI_Init(&EXTI_InitStructure);
+
+	EXTI_InitStructure.EXTI_Line = EXTI_Line14;
+	EXTI_Init(&EXTI_InitStructure);
+
+	EXTI_InitStructure.EXTI_Line = EXTI_Line15;
 	EXTI_Init(&EXTI_InitStructure);
 
 	/*--------------------------------------------------------------------------------------*/
@@ -123,10 +139,26 @@ void keyboard_SetFunctionality(void)
 	}
 
 	keyboard[0].port = GPIOA;
-	keyboard[0].pin	= GPIO_Pin_11;
-	keyboard[0].intLine = EXTI_Line11;
+	keyboard[0].pin	= GPIO_Pin_10;
+	keyboard[0].intLine = EXTI_Line10;
 
 	keyboard[1].port = GPIOA;
-	keyboard[1].pin	= GPIO_Pin_12;
-	keyboard[1].intLine = EXTI_Line12;
+	keyboard[1].pin	= GPIO_Pin_11;
+	keyboard[1].intLine = EXTI_Line11;
+
+	keyboard[2].port = GPIOA;
+	keyboard[2].pin	= GPIO_Pin_12;
+	keyboard[2].intLine = EXTI_Line12;
+
+	keyboard[3].port = GPIOA;
+	keyboard[3].pin	= GPIO_Pin_13;
+	keyboard[3].intLine = EXTI_Line13;
+
+	keyboard[4].port = GPIOA;
+	keyboard[4].pin	= GPIO_Pin_14;
+	keyboard[4].intLine = EXTI_Line14;
+
+	keyboard[5].port = GPIOA;
+	keyboard[5].pin	= GPIO_Pin_15;
+	keyboard[5].intLine = EXTI_Line15;
 }

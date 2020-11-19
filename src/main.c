@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 #include "keyboard.h"
-#include "uart.h"
+#include "lib_uart.h"
 #include "systick.h"
 			
 
@@ -27,9 +27,11 @@ int main(void)
 
 	Systick_set(100);
 	Keyboard_Init();
-	UART_fv_config(RESET);
 
-	UART_fv_SendData(start, strlen(start));
+	/* peripheral setup */
+	UART_lib_config(e_UART_2, DISABLE, 0, 0);
+
+	UART_lib_sendData(start, strlen(start));
 
 	while(1)
 	{
@@ -41,7 +43,7 @@ int main(void)
 				if ( (pressedGlobal & (1<<i)) != (localPressed& (1<<i)) )
 				{
 					snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
-					UART_fv_SendData(toSend, strlen(toSend));
+					UART_lib_sendData(toSend, strlen(toSend));
 				}
 			}
 
