@@ -50,7 +50,7 @@ void Keyboard_Init(void)
 	/*--------------------------------------------------------------------------------------*/
 	/* GPIO Init */
 	/* init GPIO as input */
-	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+	GPIO_InitStructure.GPIO_Pin = ( GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_15);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -61,8 +61,8 @@ void Keyboard_Init(void)
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource10);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource11);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource13);
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource14);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource5);
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource6);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource15);
 
 
@@ -82,10 +82,10 @@ void Keyboard_Init(void)
 	EXTI_InitStructure.EXTI_Line = EXTI_Line12;
 	EXTI_Init(&EXTI_InitStructure);
 
-	EXTI_InitStructure.EXTI_Line = EXTI_Line13;
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5;
 	EXTI_Init(&EXTI_InitStructure);
 
-	EXTI_InitStructure.EXTI_Line = EXTI_Line14;
+	EXTI_InitStructure.EXTI_Line = EXTI_Line6;
 	EXTI_Init(&EXTI_InitStructure);
 
 	EXTI_InitStructure.EXTI_Line = EXTI_Line15;
@@ -100,7 +100,34 @@ void Keyboard_Init(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
+	NVIC_Init(&NVIC_InitStructure);
+
 	keyboard_SetFunctionality();
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+	uint8_t i;
+
+	for (i = 0; i< eKey_LAST; i++)
+	{
+		if (EXTI_GetITStatus(keyboard[i].intLine) == SET)
+		{
+			EXTI_ClearITPendingBit(keyboard[i].intLine);
+			if (GPIO_ReadInputDataBit(keyboard[i].port, keyboard[i].pin) == RESET)
+			{
+				pressedGlobal |= (1 << keyboard[i].key);	/* let's xor it */
+			}
+			else
+			{
+				pressedGlobal &= (~(1 << keyboard[i].key));	/* let's xor it */
+			}
+
+
+		}
+	}
+
 }
 
 void EXTI15_10_IRQHandler(void)
@@ -151,12 +178,12 @@ void keyboard_SetFunctionality(void)
 	keyboard[2].intLine = EXTI_Line12;
 
 	keyboard[3].port = GPIOA;
-	keyboard[3].pin	= GPIO_Pin_13;
-	keyboard[3].intLine = EXTI_Line13;
+	keyboard[3].pin	= GPIO_Pin_5;
+	keyboard[3].intLine = EXTI_Line5;
 
 	keyboard[4].port = GPIOA;
-	keyboard[4].pin	= GPIO_Pin_14;
-	keyboard[4].intLine = EXTI_Line14;
+	keyboard[4].pin	= GPIO_Pin_6;
+	keyboard[4].intLine = EXTI_Line6;
 
 	keyboard[5].port = GPIOA;
 	keyboard[5].pin	= GPIO_Pin_15;

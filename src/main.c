@@ -42,7 +42,8 @@ int main(void)
 			{
 				if ( (pressedGlobal & (1<<i)) != (localPressed& (1<<i)) )
 				{
-					snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
+					//snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
+					snprintf(toSend, sizeof(toSend), "key %d status %d\n", i, (pressedGlobal & (1<<i)));
 					UART_lib_sendData(toSend, strlen(toSend));
 				}
 			}
