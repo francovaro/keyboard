@@ -31,7 +31,7 @@ int main(void)
 	/* peripheral setup */
 	UART_lib_config(e_UART_2, DISABLE, 0, 0);
 
-	UART_lib_sendData(start, strlen(start));
+	UART_lib_sendData(e_UART_2, start, strlen(start));
 
 	while(1)
 	{
@@ -44,7 +44,7 @@ int main(void)
 				{
 					//snprintf(toSend, sizeof(toSend), "%d\n", pressedGlobal);
 					snprintf(toSend, sizeof(toSend), "key %d status %d\n", i, (pressedGlobal & (1<<i)));
-					UART_lib_sendData(toSend, strlen(toSend));
+					UART_lib_sendData(e_UART_2, toSend, strlen(toSend));
 				}
 			}
 
